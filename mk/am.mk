@@ -128,14 +128,17 @@ install-am::
 endef
 
 define __af_LTLIBRARY_template
-$(eval $(1)_OBJECTS:=$($(1)_SOURCES:%.c=%.lo))
+$(eval $(2)_OBJECTS:=$($(2)_SOURCES:%.c=%.lo))
+
 all-am:: $(1)
 
 install-am::
 
-$(1):  $($(1)_OBJECTS)
-	$(LINK) -rpath $(2) $($(1)_LDFLAGS) $($(1)_OBJECTS) $($(1)_LIBADD) $(LIBS)
+clean-am::
+	rm -f $(1) $($(2)_OBJECTS) $($(2)_OBJECTS:%.lo=%.o)
 
+$(1):  $($(2)_OBJECTS)
+	$(LINK) -rpath $(3) $($(2)_LDFLAGS) $($(2)_OBJECTS) $($(2)_LIBADD) $(LIBS)
 endef
 
 define __af_DATUM_template
@@ -162,7 +165,7 @@ __af_SCRIPTS_VARIABLES:=$(filter %_SCRIPTS, $(.VARIABLES))
 
 $(foreach prog,$(__af_PROGRAM_VARIABLES),$(eval $(call __af_PROGRAM_template,$($(prog)), $($(subst _PROGRAMS,,$(prog))dir))))
 $(foreach lib,$(__af_LIBRARIES_VARIABLES),$(eval $(call __af_LIBRARY_template,$($(lib)), $($(subst _LIBRARIES,,$(lib))dir))))
-$(foreach ltlib,$(__af_LTLIBRARIES_VARIABLES),$(eval $(call __af_LTLIBRARY_template,$($(ltlib)), $($(subst _LTLIBRARIES,,$(ltlib))dir))))
+$(foreach ltlib,$(__af_LTLIBRARIES_VARIABLES),$(eval $(call __af_LTLIBRARY_template,$($(ltlib)),$(subst .,_,$($(ltlib))),$($(subst _LTLIBRARIES,,$(ltlib))dir))))
 $(foreach datum,$(__af_DATA_VARIABLES),$(eval $(call __af_DATUM_template,$($(datum)), $($(subst _DATA,,$(datum))dir))))
 $(foreach script,$(__af_SCRIPTS_VARIABLES),$(eval $(call __af_SCRIPT_template,$($(script)), $($(subst _SCRIPTS,,$(script))dir))))
 
@@ -211,7 +214,7 @@ endef
 	$(call __af_cc_compile, $*, $@, $<)
 
 %.lo: %.c
-	$(call __af_cc_ltcompile, $*, $@, $<)
+	$(call __af_ltcc_compile, $*, $@, $<)
 
 %.o: %.cpp
 	$(call __af_cxx_compile, $*, $@, $<)
