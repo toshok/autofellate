@@ -192,7 +192,7 @@ $(call __af_dep_template, $(1), $(2), $(3), $(COMPILE), no, $(CCDEPMODE))
 $(COMPILE) -c $(3)
 endef
 
-define __af_cc_compile
+define __af_ltcc_compile
 $(call __af_dep_template, $(1), $(2), $(3), $(LTCOMPILE), yes, $(CCDEPMODE))
 $(LTCOMPILE) -c $(3)
 endef
