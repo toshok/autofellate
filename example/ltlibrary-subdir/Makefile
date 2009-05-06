@@ -5,6 +5,8 @@ lib_LTLIBRARIES=libfoo.la
 
 libfoo_la_SOURCES=foo.c
 
-# ... except for this little line
+
+
+# ... except for these two lines
 topdir=../../
 include $(topdir)/mk/am.mk
